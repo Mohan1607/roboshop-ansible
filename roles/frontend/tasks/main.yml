@@ -1,0 +1,4 @@
+- name: print component
+  hosts: all
+  ansible.builtin.debug:
+    msg: frontend

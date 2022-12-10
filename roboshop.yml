@@ -1,0 +1,5 @@
+- name: Run roboshop component
+  hosts: all
+  connection: local
+  roles:
+    - "{{ROLE_NAME}}"
