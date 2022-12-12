@@ -1,3 +1,4 @@
-- name: print component
-  ansible.builtin.debug:
-    msg: frontend
+- name: Install nginx
+  ansible.builtin.yum:
+    name: nginx
+    state: installed
