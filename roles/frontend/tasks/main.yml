@@ -1,5 +1,18 @@
-
- - name: Install nginx
+  mv frontend-main/static/* .
+    PRINT "MOVE THE CONF FILE"
+    mv frontend-main/localhost.conf /etc/nginx/default.d/roboshop.conf &>> $LOG
+    STAT $?
+    PRINT "Update RoboShop Configuration"
+    sed -i -e '/catalogue/ s/localhost/dev-catalogue.agileworld.online/'  -e '/user/ s/localhost/dev-user.agileworld.online/' -e '/cart/ s/localhost/dev-cart.agileworld.online/' -e '/shipping/ s/localhost/dev-shipping.agileworld.online/' -e '/payment/ s/localhost/dev-payment.agileworld.online/' /etc/nginx/default.d/roboshop.conf
+    STAT $?
+    PRINT "START NGINX SERVICE"
+    systemctl restart nginx &>> $LOG
+    STAT $?
+    PRINT "ENABLE NGINX SERVICE"
+    systemctl enable nginx &>> $LOG
+    STAT $?
+  
+  - name: Install nginx
    ansible.builtin.yum:
      name: nginx
      state: installed
@@ -7,3 +20,12 @@
    ansible.builtin.import_role:
      name: common
      tasks_from: download-app-code
+ - name: Copy file with owner and permissions
+   ansible.builtin.copy:
+     src: "{{COMPONENT}}"-main/localhost.conf
+     dest: /etc/nginx/default.d/roboshop.conf
+ - name: Replace a localhost entry searching for a literal string to avoid escaping
+   ansible.builtin.lineinfile:
+     path: /etc/nginx/default.d/roboshop.conf
+     search_string: '127.0.0.1'
+     line: 127.0.0.1 localhost
