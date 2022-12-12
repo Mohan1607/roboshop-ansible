@@ -1,5 +1,3 @@
-
-  
  - name: Install nginx
    ansible.builtin.yum:
      name: nginx
@@ -8,12 +6,3 @@
    ansible.builtin.import_role:
      name: common
      tasks_from: download-app-code
- - name: Copy file with owner and permissions
-   ansible.builtin.copy:
-     src: "{{COMPONENT}}"-main/localhost.conf
-     dest: /etc/nginx/default.d/roboshop.conf
- - name: Replace a localhost entry searching for a literal string to avoid escaping
-   ansible.builtin.lineinfile:
-     path: /etc/nginx/default.d/roboshop.conf
-     search_string: '127.0.0.1'
-     line: 127.0.0.1 localhost
