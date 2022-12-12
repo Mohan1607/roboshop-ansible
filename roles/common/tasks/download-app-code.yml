@@ -1,0 +1,28 @@
+
+    #PRINT "DOWNLOAD APPLICATION CODE"
+    #curl -s -L -o /tmp/${COMPONENT}.zip "https://github.com/roboshop-devops-project/${COMPONENT}/archive/main.zip" &>> $LOG
+    #STAT $?
+    #PRINT "REMOVE PREVIUOS VERSION OF ${COMPONENT}"
+    #cd ${APP_LOC}
+    #rm -rf ${CONTENT} &>> $LOG
+    #STAT $?
+    #PRINT "EXTRACT THE APP CONTENT"
+    #unzip -o /tmp/${COMPONENT}.zip &>> $LOG
+    #STAT $?
+  - name: Add application user
+    ansible.builtin.user:
+      name: "{{APP_USER}}"
+    when: APP_USER is defined
+  - name: Download App content
+    ansible.builtin.get_url:
+      url: https://github.com/roboshop-devops-project/{{COMPONENT}}/archive/main.zip
+      dest: /tmp/{{COMPONENT}}.zip
+  - name: Remove prevoius App content
+    ansible.builtin.file:
+      path: "{{APP_LOC}}"
+      state: absent
+  - name: Unzip the app content
+    ansible.builtin.unarchive:
+      src: https://github.com/roboshop-devops-project/{{COMPONENT}}/archive/main.zip
+      dest: "{{APP_LOC}}"
+      remote_src: yes

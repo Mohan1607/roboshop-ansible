@@ -1,4 +1,9 @@
-- name: Install nginx
-  ansible.builtin.yum:
-    name: nginx
-    state: installed
+
+ - name: Install nginx
+   ansible.builtin.yum:
+     name: nginx
+     state: installed
+ - name: import common role
+   ansible.builtin.import_role:
+     name: common
+     tasks_from: download-app-code
